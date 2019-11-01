@@ -1,0 +1,33 @@
+"""
+A 4x256x256 neural network for approximating pi(a | s)
+@author yubaidi
+"""
+import torch.nn as nn
+import torch.nn.functional as F
+
+class PolicyNetwork(nn.Module):
+  def __init__(self, D_in, D_h1, D_h2, D_out):
+    super(PolicyNetwork, self).__init__()
+    self.fc1 = nn.Linear(D_in, D_h1)
+    self.fc2 = nn.Linear(D_h1, D_h2)
+    self.fc3 = nn.Linear(D_h2, D_out)
+
+  def forward(self, x):
+    h1 = F.relu(self.fc1(x))
+    h2 = F.relu(self.fc2(h1))
+    output = F.softmax(self.fc3(h2))
+    return output
+
+
+def loss_function(episodes, g):
+    loss = 0
+    for i in range(len(episodes)):
+      r = episodes[i] # rewards for each episode
+      for j in range(len(r)):
+        loss += r[j] * (g ** j) # discounted rewards;
+    loss = - loss / len(episodes)
+    return loss
+
+
+
+
