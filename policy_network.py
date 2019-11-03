@@ -19,15 +19,4 @@ class PolicyNetwork(nn.Module):
     return output
 
 
-def loss_function(episodes, g):
-    loss = 0
-    for i in range(len(episodes)):
-      r = episodes[i] # rewards for each episode
-      for j in range(len(r)):
-        loss += r[j] * (g ** j) # discounted rewards;
-    loss = - loss / len(episodes)
-    return loss
-
-
-
 
